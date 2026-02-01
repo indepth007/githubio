@@ -1,0 +1,136 @@
+:root{
+  --bg: #ffeef0;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --accent: #ec4899;
+  --yes: #10b981;
+  --happy-blue: #3b82f6;
+  --no: #ef4444;
+}
+
+[data-theme="dark"]{
+  --bg: #071029;
+  --card: #071827;
+  --text: #e6eef8;
+  --muted: #9aa6b2;
+  --accent: #ff7ab6;
+  --yes: #16a34a;
+  --no: #ef4444;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+body{display:flex;align-items:center;justify-content:center;padding:24px}
+
+.card{background:var(--card);border-radius:18px;padding:12px 28px;box-shadow:0 12px 30px rgba(2,6,23,0.08);max-width:820px;width:min(96%,820px);text-align:center;position:relative;transition:all .28s cubic-bezier(.2,.9,.2,1)}
+.card.expanded{padding:36px;box-shadow:0 18px 40px rgba(2,6,23,0.12);max-width:820px}
+.card h1{font-size:26px;margin:0 0 6px}
+.lead{color:var(--muted);margin:0 0 18px}
+
+.top-right{position:absolute;right:14px;top:12px}
+.btn-theme{display:inline-flex;align-items:center;gap:8px;background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 8px;border-radius:999px;cursor:pointer;font-size:14px;color:var(--text);transition:background .18s,color .18s,transform .12s}
+.btn-theme .icon{display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;font-size:16px;transition:transform .28s cubic-bezier(.2,.9,.2,1),opacity .18s}
+.btn-theme[aria-pressed="true"]{background:rgba(0,0,0,0.06)}
+.btn-theme[aria-pressed="true"] .icon{transform:rotate(20deg) translateX(2px)}
+.btn-theme[aria-pressed="false"] .icon{transform:none}
+
+.actions{height:120px;position:relative;display:flex;align-items:center;justify-content:center}
+.btn{padding:10px 18px;border-radius:999px;border:none;color:#fff;cursor:pointer;font-weight:700;transition:transform .12s ease}
+.btn:active{transform:scale(.98)}
+.yes{background:var(--yes);margin-right:18px;padding:8px 14px;font-weight:700}
+/* Make No bigger so it covers Yes initially */
+.no{background:var(--no);position:absolute;transition:transform .22s ease,left .22s ease,top .22s ease;padding:14px 28px;font-size:16px;font-weight:800;border-radius:14px;z-index:40;box-shadow:0 8px 20px rgba(2,6,23,0.16)}
+
+.tip{margin-top:14px;color:var(--muted);font-size:13px}
+
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:80}
+.modal .box{background:var(--card);padding:16px;border-radius:12px;max-width:720px;width:92%;text-align:left}
+.modal img{width:100%;border-radius:8px;display:block}
+.modal .close{margin-top:10px;display:flex;justify-content:flex-end}
+
+@media (prefers-reduced-motion: no-preference){
+  .card,.btn{transition:all .18s cubic-bezier(.2,.9,.2,1)}
+}
+
+/* Utility */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Hearts that pop from corners */
+.hearts-wrapper{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:50}
+.heart{position:absolute;display:inline-block;transform-origin:center center;opacity:0;will-change:transform,opacity;animation:heart-pop 900ms forwards}
+@keyframes heart-pop{
+  0%{transform:translateY(0) scale(.6) rotate(0deg);opacity:0}
+  25%{transform:translateY(-6px) scale(1.05) rotate(-10deg);opacity:1}
+  60%{transform:translateY(-28px) scale(.95) rotate(10deg);opacity:.9}
+ 100%{transform:translateY(-50px) scale(.9) rotate(20deg);opacity:0}
+}
+
+/* Girl reveal container */
+.girl-wrap{width:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:0;overflow:hidden;max-height:0;opacity:0;transition:max-height .7s cubic-bezier(.2,.9,.2,1),opacity .6s,margin-top .36s}
+.girl-wrap.revealed{max-height:900px;opacity:1;margin-top:18px}
+.girl-img{width:100%;max-width:420px;border-radius:12px;display:block;box-shadow:0 18px 40px rgba(2,6,23,0.14);transform:translateY(10px);opacity:0;transition:transform .7s ease,opacity .6s}
+.girl-wrap.revealed .girl-img{transform:translateY(0);opacity:1}
+
+/* caption and badge styles */
+.girl-caption{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.caption-line{margin:0;color:var(--text);font-size:16px}
+.badge{display:inline-flex;align-items:center;justify-content:center;padding:8px 14px;border-radius:999px;color:#fff;font-weight:800;pointer-events:none;font-family:Segoe UI, Roboto, Arial, sans-serif;text-transform:uppercase}
+.yes-badge{background:var(--yes)}
+.happiest-badge{background:var(--happy-blue)}
+
+/* love icon under subtitle */
+.love-icon{font-size:22px;margin-top:10px;color:var(--accent);display:flex;align-items:center;justify-content:center}
+.love-icon.aria-hidden{pointer-events:none}
+
+/* badge entrance animation */
+.badge.pop{
+  animation:badge-pop 520ms cubic-bezier(.2,.9,.2,1) forwards;
+}
+@keyframes badge-pop{
+  0%{transform:scale(.6);opacity:0}
+  60%{transform:scale(1.08);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+
+/* small button variant */
+.btn.small{padding:8px 12px;border-radius:10px;background:rgba(0,0,0,0.06);color:var(--text);font-weight:700}
+
+/* theme presets */
+.theme-presets{display:inline-flex;gap:6px;align-items:center}
+.theme-presets .preset{width:18px;height:18px;border-radius:6px;border:1px solid rgba(0,0,0,0.06);cursor:pointer}
+
+@media (max-width:420px){
+  .theme-presets{display:none}
+}
+[data-preset="lavender"]{ --bg:#fbf7ff; --card:#f8f5ff; --accent:#a78bfa; --text:#1f2937; --yes:#7c3aed; --happy-blue:#7c3aed }
+
+/* Ensure data-theme dark overrides presets (higher specificity / placed after presets) */
+[data-theme="dark"]{
+  --bg: #071029;
+  --card: #071827;
+  --text: #e6eef8;
+  --muted: #9aa6b2;
+  --accent: #ff7ab6;
+  --yes: #16a34a;
+  --no: #ef4444;
+}
+
+/* message sequence */
+.message-seq{min-height:28px;margin-top:6px;color:var(--muted);font-size:15px}
+.message-seq .msg{opacity:0;display:block;transition:opacity .36s}
+.message-seq .msg.visible{opacity:1}
+
+/* confetti canvas overlay */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:90}
+
+/* Theme presets (override variables via data-preset on <html>) */
+[data-preset="rose"]{ --bg: #fff6fb; --card:#fff1f6; --accent:#ff7ab6; --text:#2b1b22; --yes:#16a34a; --happy-blue:#60a5fa }
+[data-preset="pastel"]{ --bg:#f7fffb; --card:#ffffff; --accent:#ffd6e0; --text:#1f2937; --yes:#34d399; --happy-blue:#7dd3fc }
+[data-preset="midnight"]{ --bg:#071029; --card:#071827; --accent:#7c3aed; --text:#e6eef8; --yes:#16a34a; --happy-blue:#60a5fa }
+[data-preset="sunset"]{ --bg:#fff7f5; --card:#fff5f7; --accent:#ff6b6b; --text:#2b1b22; --yes:#16a34a; --happy-blue:#fb7185 }
+[data-preset="forest"]{ --bg:#f2fffb; --card:#f0fff9; --accent:#34d399; --text:#0f172a; --yes:#059669; --happy-blue:#60a5fa }
+[data-preset="lavender"]{ --bg:#fbf7ff; --card:#f8f5ff; --accent:#a78bfa; --text:#1f2937; --yes:#7c3aed; --happy-blue:#7c3aed }
+
+
+
